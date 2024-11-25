@@ -1,14 +1,20 @@
-import cors from "cors";
-import express from "express";
-import path from "path";
-import bodyParser from "body-parser";
+const express = require("express");
+const path = require("path");
+const messageRoutes = require("./src/routes/messageRoutes");
 
 const app = express();
+const port = 3000;
 
-app.use("views", path.join(__dirname, "views"));
-app.use(bodyParser());
-app.use(cors());
+app.use(express.urlencoded({ extended: true }));
 app.use("view engine", "ejs");
-app.use("/", routes);
+app.use(express.static(path.join(__dirname, "public")));
 
-export default app;
+app.use("/", messageRoutes);
+
+app.use((req, res) => {
+	res.status(404).send("Page not found");
+});
+
+app.listen(port, () => {
+	console.log(`Server is running at http://localhost:${port}`);
+});
